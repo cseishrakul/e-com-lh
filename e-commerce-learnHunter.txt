@@ -1,0 +1,451 @@
+/*--------------------------------------------------------*/
+
+    1.Lets Install Laravel new project.
+    2. Lets Install some packages for our work purphase..
+        2.1-> yajra data table.->for collecting huge data in database
+        2.2-> image intervention.->for resizing images
+        2.3-> bumbummen99/shopingcart.->for add cart
+        2.4-> laravel/ui->for laravel authentication
+            2.4.1-> php artisan ui bootstrap
+            2.4.2-> php artisan ui bootstrap --auth
+            2.4.3-> npm install && npm run dev
+
+    3. Multiauth..
+        3.1-> create a database in phpmyadmin & connect in .env file of laravel project.
+        3.2-> laravel->database->migration->users->
+                phone & is_admin field add kori && models->user->$fillable-> 'phone','is_admin' add kori && php artisan migrate..
+        3.3-> routes a admin route er jonno alada file banai->admin.php && providers->Routeserviceprovider-> Route::middleware('web')
+                        ->group(base_path('routes/admin.php'));
+
+        3.4-> Lets make a middleware and inside its function->
+            if(auth()->user()->is_admin == 1){
+                    return $next($request);
+                }
+                return redirect()->route('home')->with('error','You are not a admin');
+        3.5-> admin er jonno route,function resources a admin folder->admin.blade.php create kori.
+        3.6-> app->http->auth->loginController->
+            public function login(Request $request){
+                $validated = $request->validate([
+                    'email' => 'required|email',
+                    'password' => 'required',
+                ]);
+                if(auth()->attempt(array('email' => $request->email, 'password' => $request->password))){
+                    if(auth()->user()->is_admin == 1){
+                        return redirect()->route('admin.home');
+                    }else{
+                        return redirect()->route('home');
+                    }
+                }else{
+                    return redirect()->back()->with('error','Invalid Email or Password');
+                }
+            }
+
+    //Admin Panel
+
+    4. Mastering Admin Panel..
+
+    5. Connect MailTrap in Project..
+
+    6. For alert message lets use sweetalert && toastr..
+
+    7. Lets Make AdminController for Admin.. And Make Route::group in this AdminController && make admin logout function...3.3 er route gulu group er vitor nei;
+
+    8. lets have category data table controller and model..then lets add,delete,edit category.In category data table lets have 4 input field->'category_name','category_slug','home_page->string','icon;
+
+    and in model lets put fillable data...
+
+    9. lets have subcategory data table controller and model..then lets crud it.In subcategory data table lets have input fields->
+     $table->unsignedBigInteger('category_id');
+            $table->string('subcategory_name');
+            $table->string('subcat_slug')->nullable();
+            $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade'); 
+
+            and in model lets put fillable data...
+            subcategory will be join with category;
+
+    10. lets have childcategory data table controller and model..then lets crud it.In childcategory data table lets have input fields->
+        $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('subcategory_id');
+            $table->string('childcategory_name');
+            $table->string('childcategory_slug');
+            $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
+
+    10.2. Lets have brand model controller migration and lets crud it.in brands db_field:
+        $table->string('brand_name');
+        $table->string('brand_slug');
+        $table->string('brand_logo')->nullable();
+        $table->integer('front_page')->nullable();
+
+    11. Lets Change Admin Password;
+
+    12. Lets make seo data table controller and model.In seos data table lets have input fields->
+        $table->string('meta_title')->nullable();
+            $table->string('meta_author')->nullable();
+            $table->string('meta_tag')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_keyword')->nullable();
+            $table->string('google verification')->nullable();
+            $table->string('google_analytics')->nullable();
+            $table->string('alexa_verification')->nullable();
+            $table->string('gogle_adsense')->nullable();
+
+    13. Lets make smtp data table controller .In smtp data table lets have input fields->
+        $table->string('mailer')->nullable();
+            $table->string('host')->nullable();
+            $table->string('port')->nullable();
+            $table->string('user_name')->nullable();
+            $table->string('password')->nullable();
+
+    14. Lets make dynamic page....for that lets make data table controller and lets crud that page setting.in data field lets have->
+            $table->integer('page_position')->nullable();
+            $table->string('page_name')->nullable();
+            $table->string('page_slug')->nullable();
+            $table->string('page_title')->nullable();
+            $table->text('page_description')->nullable();
+
+    15. Lets do product design...for that lets make data table controller and in data field lets have->
+    $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('subcategory_id');
+            $table->integer('childcategory_id')->nullable();
+            $table->integer('brand_id')->nullable();
+            $table->integer('pickup_point_id')->nullable();
+            $table->string('name');
+            $table->string('slug');
+            $table->string('code');
+            $table->string('unit')->nullable();
+            $table->string('tags')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+            $table->string('video')->nullable();
+            $table->string('purchase_price')->nullable();
+            $table->string('selling_price')->nullable();
+            $table->string('discount_price')->nullable();
+            $table->string('stock_quantity')->nullable();
+            $table->integer('warehouse')->nullable();
+            $table->string('description')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('images')->nullable();
+            $table->integer('featured')->nullable();
+            $table->integer('today_deal')->nullable();
+            $table->integer('status')->nullable();
+            $table->integer('product_views')->nullable();
+            $table->integer('trendy')->nullable();
+            $table->integer('product_slider')->nullable();
+            $table->integer('flash_deal_id')->nullable();
+            $table->integer('cash_on_delivery')->nullable();
+            $table->integer('admin_id')->nullable();
+            $table->timestamps();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
+    
+    16. Lets Make warehouse and for that lets have data table and controller and in data table lets have->
+            $table->string('warehouse_name')->nullable();
+            $table->string('warehouse_address')->nullable();
+            $table->string('warehouse_phone')->nullable();
+
+    17. Lets do website setting->for that lets make a db & update data from dashboard;
+        in data table lets have->
+            $table->string('currency')->nullable();
+            $table->string('phone_one')->nullable();
+            $table->string('phone_two')->nullable();
+            $table->string('main_email')->nullable();
+            $table->string('support_email')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('favicon')->nullable();
+            $table->string('address')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('linkedin')->nullable();
+
+    18. Lets do crud of warehouse;
+
+    19. Cupon create kori.....DB nei and db_field->
+            $table->string('cupon_code')->nullable();
+            $table->string('valid_date')->nullable();
+            $table->integer('type')->nullable();
+            $table->integer('cupon_amount')->nullable();
+            $table->string('status')->nullable();
+        And Crud kori
+
+    
+    20. Lets create pickup point for e-commerce website..in db_field lets have:
+            $table->string('pickup_point_name');
+            $table->string('pickup_point_address');
+            $table->string('pickup_point_phone');
+            $table->string('pickup_point_phone_two')->nullable();
+
+    21. lets make product create,show,edit,index page and make create and store method;
+    22. Product model nei and product field er shb data field name $fillable er vitore bosai && brand,category,subcategory, childcategory model product model  a join kori;
+
+    23. Db te product table a data insert kori;
+    24. Lets show all product in dashboard with the help of yajra table;
+    25. with the help of ajax lets chage the value of status featured 0 to 1 in product table;
+    26. lets filter product in dashboard with the help of ajax;
+    27. Lets Have Product Edit Page && Lets Edit Our Product;
+    28. Lets make campaign for products.....for that lets make controller model and db.In DB lets have fields:
+            $table->string('title');
+            $table->string('start_date');
+            $table->string('end_date');
+            $table->string('image');
+            $table->string('status');
+            $table->string('discount');
+            $table->string('month');
+            $table->string('year');
+
+    Lets do crud for campaign;
+
+    29. Lets manage ticket system and rply all message from admin panel when frontend 28 number will be done;
+
+    30. Lets Show all order in admin panel and crud it(it have to do after frontend->30);
+    31. Lets make blog page and for that lets have two db_table->
+    1*blog_category->
+            $table->string('category_name')->nullable();
+            $table->string('category_slug')->nullable();
+
+    2*blogs->
+            $table->unsignedBigInteger('blog_category_id');
+            $table->string('title')->nullable();
+            $table->string('slug')->nullable();
+            $table->string('publish_date')->nullable();
+            $table->string('description')->nullable();
+            $table->string('thumbnail')->nullable();
+            $table->string('tag')->nullable();
+            $table->string('status')->nullable();
+            $table->timestamps();
+            $table->foreign('blog_category_id')->references('id')->on('blog_category')->onDelete('cascade');
+
+        lets crud blogs in database and fetch them in our blog page;
+
+    32. Lets make user role management.for that lets have some extra db_field in users db_table->
+            $table->integer('category')->default(0)->nullable();
+            $table->integer('product')->default(0)->nullable();
+            $table->integer('offer')->default(0)->nullable();
+            $table->integer('order')->default(0)->nullable();
+            $table->integer('blog')->default(0)->nullable();
+            $table->integer('pickup')->default(0)->nullable();
+            $table->integer('ticket')->default(0)->nullable();
+            $table->integer('contact')->default(0)->nullable();
+            $table->integer('report')->default(0)->nullable();
+            $table->integer('setting')->default(0)->nullable();
+            $table->integer('userrole')->default(0)->nullable();
+            $table->bolean('role_admin')->default(1)->nullable();
+
+    * Lets Add role in db_table and fetch them in dashboard and crud it && for help lets have RoleController(random name);
+    * From admin sidebar make some condition for every admin that which option they can see and work;
+
+
+    33. Lets make our dashboard fully dynamic;
+
+    // End Admin Panel
+
+    // Frontend
+
+    1. Lets have a template in our frontend && do some partial settings;
+    2. Lets have category in our home page with sub & childcategory;
+    3. Lets make product-details page;
+    4. Lets have user login system;
+    5. Lets make review system in product details page with the help of review database model and controller, in review db lets have fields like->
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+            $table->text('review')->nullable();
+            $table->integer('rating')->nullable();
+            $table->string('review_date')->nullable();
+            $table->string('review_month')->nullable();
+            $table->integer('review_year')->nullable();
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+    6. Lets Make User Registration Page;
+    7. Lets make wishlist in website products.For that lets make wishlist migration..in migratin lets have db_fields:
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+            $table->string('date');
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+        and lets make route function for it && lets show wishlist in wishlist page and make link to add product in cart;
+
+    8. Lets show our featured products in homepage which are active from dashboard;
+    9. Lets show our most viewd product in homepage which are counted by products db_table->product_views;
+    9. Lets show our trendy product in homepage which are 1 by products db_table->trendy;
+    10.lets make product quick view with ajax and modal;
+    11.Lets add icon in homepage from category database;
+    12.Lets show our category wise product in homepage and also all category as well
+    13.Lets Show our brands in homepage;
+    14. Lets fetch data by today_deal db_field from products db;
+    15. Lets Add Product to the cart by using bumbummen99 package and ajax and do all crud of cart like('update item, delete item, quantity update, delete single product, full cart clear');
+    16. Lets fetch data by category in product page;
+    17. Lets make users dashboard and lets have website review system from there;for that lets have migrations of wbreviews(means website reviews)->
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('name');
+            $table->text('review')->nullable();
+            $table->integer('rating');
+            $table->string('review_date');
+            $table->integer('status');
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+    18. Lets have setting option of creating shipping address in users dashboard and lets have a profile controller and lets have shippins db_table->
+            $table->unsignedBigInteger('user_id');
+            $table->string('shipping_name')->nullable();
+            $table->string('shipping_phone')->nullable();
+            $table->string('shipping_address')->nullable();
+            $table->string('shipping_city')->nullable();
+            $table->string('shipping_country')->nullable();
+            $table->string('shipping_zipcode')->nullable();
+            $table->string('shipping_email')->nullable();
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+    19. Lets change users password from users dashboard;
+    20. Lets Show our dynamic pages in frontend from pages DB;
+    21. Lets have a migrations for newsletter and in migration lets have field->
+        $table()->string('email')->nullable();
+
+    22. Lets create checkout page.And lets make sure that without login no user should see chekout page;
+
+    23. Lets add coupon in our checkout page & after using coupon total price will calculate with the help of Cart;
+    24. Lets make order place. For that lets have two db_table(orders, order_details). In orders table->
+            $table->integer('user_id');
+            $table->string('c_name')->nullable();
+            $table->string('c_phone')->nullable();
+            $table->string('c_email')->nullable();
+            $table->string('c_country')->nullable();
+            $table->string('c_zipcode')->nullable();
+            $table->string('c_address')->nullable();
+            $table->string('c_extra_phone')->nullable();
+            $table->string('c_city')->nullable();
+            $table->string('subtotal')->nullable();
+            $table->string('total')->nullable();
+            $table->string('coupon_code')->nullable();
+            $table->string('coupon_discount')->nullable();
+            $table->string('after_discount')->nullable();
+            $table->string('payment_type')->nullable();
+            $table->string('tax')->nullable();
+            $table->string('shipping_charge',5)->nullable();
+            $table->string('order_id',25)->nullable();
+            $table->integer('status')->nullable()->default();
+            $table->string('date')->nullable();
+            $table->string('month')->nullable();
+            $table->string('year')->nullable();
+
+    * In order_details table->
+            $table->integer('order_id')->nullable();
+            $table->integer('product_id')->nullable();
+            $table->string('product_name')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+            $table->string('quantity')->nullable();
+            $table->string('single_price')->nullable();
+            $table->string('subtotal_price')->nullable();
+
+    * Order place button will hit this function and function will help to sent data in both table->
+     public function OrderPlace(Request $request){
+        $order = array();
+        $order['user_id'] = Auth::id();
+        $order['c_name'] = $request->c_name;
+        $order['c_phone'] = $request->c_phone;
+        $order['c_email'] = $request->c_email;
+        $order['c_address'] = $request->c_address;
+        $order['c_city'] = $request->c_city;
+        $order['c_country'] = $request->c_country;
+        $order['c_zipcode'] = $request->c_zipcode;
+        $order['c_extra_phone'] = $request->c_extra_phone;
+        if (Session::has('coupon')) {
+            $order['subtotal'] = Cart::subtotal();
+            $order['total'] = Cart::total();
+            $order['coupon_code'] = Session::get('coupon')['name'];
+            $order['coupon_discount'] = Session::get('coupon')['discount'];
+            $order['after_discount'] = Session::get('coupon')['after_discount'];
+            
+        }else{
+            $order['subtotal'] = Cart::subtotal();
+            $order['total'] = Cart::total();
+        }
+        $order['payment_type'] = $request->payment_type;
+        $order['tax'] = 0;
+        $order['shipping_charge'] = 0;
+        $order['order_id'] = rand(10000,900000);
+        $order['status'] = 0;
+        $order['date'] = date('d-m-y');
+        $order['month'] = date('d-m-y');
+        $order['year'] = date('d-m-y');
+        $order_id = DB::table('orders')->insertGetId($order);
+
+        // Order Details
+        $content = Cart::content();
+
+        $details = array();
+        foreach($content as $row){
+            $details['order_id'] = $order_id;
+            $details['product_id'] = $row->id;
+            $details['product_name'] = $row->name;
+            $details['color'] = $row->options->color;
+            $details['size'] = $row->options->size;
+            $details['quantity'] = $row->qty;
+            $details['single_price'] = $row->price;
+            $details['subtotal_price'] = $row->price*$row->qty;
+            DB::table('order_details')->insert($details);
+        }
+        Cart::destroy();
+        if(Session::has('coupon')){
+            Session::forget('coupon');
+        }
+
+        $notification = array('message' => 'Order Placed Successfully!', 'alert-type' => 'success');
+        return redirect()->to('/')->with($notification);
+    }
+
+    25. Lets send email to customer when they do order place;
+    26. Lets show users all order in user dashboard(if user_id == Auth::id());
+    27. Lets make support ticket system.for that lets have db_table->
+            $table->integer('user_id')->nullable();
+            $table->string('subject')->nullable();
+            $table->string('srevice')->nullable();
+            $table->string('priority')->nullable();
+            $table->text('message')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('status')->nullable()->default(0);
+            $table->string('date')->nullable();
+
+    28. Lets make DB_table replies for ticket reply->
+            $table->unsignedBigInteger('ticket_id');
+            $table->integer('user_id')->nullable();
+            $table->text('message')->nullable();
+            $table->string('image')->nullable();
+            $table->string('reply_date')->nullable();
+            $table->timestamps();
+            $table->foreign('ticket_id')->references('id')->on('tickets')
+
+    29. Lets see full order details in user dashboard;
+    30. Lets track our order with the help of order_id data field from orders and order_details db_table;
+    31. Lets Make Contact Page and and send users name email messge to contact db_table and show this all message from admin panel and rply them using mail;
+
+
+    // End Frontend
+
+
+
+    // Payment Gateway(AamerPay)
+    1. Lets have a new DB_table->
+            $table->string('gateway_name')->nullable();
+            $table->string('store_id')->nullable();
+            $table->string('signature_key')->nullable();
+            $table->integer('status')->default(0);
+    
+    2. From Admin Lets add and update all the db_field of no.1;
+    3. Lets follow AamerPay website laravel instruction for set the gateway;
+
+    // Social Media login
+    1.Lets use socialite package for google log in;
+
+    // Print
+    1. Lets use printThis jquery plugin for print anything as pdf from admin dashboard;
+
+    // Lets have some social share button on frontend;
+/*--------------------------------------------------------*/
