@@ -1,6 +1,6 @@
 # E-Commerce Website
 
-![E-Commerce Website](https://i.imgur.com/Oi5cIW1.png)
+![E-Commerce Website](https://i.imgur.com/F6jEyk2.png)
 
 This E-Commerce website, developed using Laravel and HTML, offers a user-friendly shopping experience with seamless product browsing, cart management, and checkout. Integrated with **AamarPay** as the payment gateway, it enables secure and convenient payment processing, making it suitable for small to medium-sized online stores.
 
